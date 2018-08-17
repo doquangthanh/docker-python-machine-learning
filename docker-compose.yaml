@@ -1,14 +1,17 @@
 version: '3'
 services:
 
+  ### Python Workspace Container
   python:
     container_name: python
     build: ./build/python
     volumes:
-    - /var/lib/python
+      - ./src:/var/www
     links:
-    - mysql
-    - redis
+      - mysql
+      - redis
+    tty: true
+
     
   ### MySQL Container
   mysql:
@@ -30,17 +33,7 @@ services:
   redis:
     image: redis
     expose:
-        - "6379"
-     
-  ### Workspace Utilities Container
-  workspace:
-    build: ./build/workspace
-    volumes:
-      - ./src:/var/www
-    links:
-      - mysql
-      - redis
-    tty: true
+        - "6379"   
 
 volumes:
   src:
