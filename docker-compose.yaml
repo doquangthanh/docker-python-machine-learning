@@ -1,39 +1,29 @@
 version: '3'
 services:
-
   ### Python Workspace Container
-  python:
+ python:
     container_name: python
     build: ./build/python
     volumes:
       - ./src:/var/www
-    links:
-      - mysql
-      - redis
     tty: true
-
-    
-  ### MySQL Container
-  mysql:
-    container_name: mysql
-    build: ./build/mysql
+ ### Tensorflow lib Container
+ tensorflow:
+    container_name: tensorflow
+    build: ./build/tensorflow
     volumes:
-      - /var/lib/mysql
-    expose:
-      - "3306"
-    environment:
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+       - ./src:/var/www
     ports:
-      - "3306:3306"
-      
-  ### Redis Container
-  redis:
-    image: redis
-    expose:
-        - "6379"   
+      - 8888:8888
+ ### Tensorflow Boarch Container
+ tensorboard:
+    container_name: tensorboard
+    build: ./build/tensorflow
+    volumes:
+       - ./src:/var/www
+    ports:
+      - 6006:6006
+    command: tensorboard --logdir=/var/www/graphs
 
 volumes:
   src:
